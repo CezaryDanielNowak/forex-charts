@@ -30,41 +30,31 @@
 
   <div class="container">
     <div class="section">
-
-      <!--   Icon Section   -->
       <div class="row">
-        <div class="col s12 m4">
-          <div class="icon-block">
-            <h2 class="center light-blue-text"><i class="mdi-image-flash-on"></i></h2>
-            <h5 class="center">Speeds up development</h5>
-
-            <p class="light">We did most of the heavy lifting for you to provide a default stylings that incorporate our custom components. Additionally, we refined animations and transitions to provide a smoother experience for developers.</p>
-          </div>
-        </div>
-
-        <div class="col s12 m4">
-          <div class="icon-block">
-            <h2 class="center light-blue-text"><i class="mdi-social-group"></i></h2>
-            <h5 class="center">User Experience Focused</h5>
-
-            <p class="light">By utilizing elements and principles of Material Design, we were able to create a framework that incorporates components and animations that provide more feedback to users. Additionally, a single underlying responsive system across all platforms allow for a more unified user experience.</p>
-          </div>
-        </div>
-
-        <div class="col s12 m4">
-          <div class="icon-block">
-            <h2 class="center light-blue-text"><i class="mdi-action-settings"></i></h2>
-            <h5 class="center">Easy to work with</h5>
-
-            <p class="light">We have provided detailed documentation as well as specific code examples to help new users get started. We are also always open to feedback and can answer any questions a user may have about Materialize.</p>
-          </div>
+        <div class="col s12" id="chart_line_1">
+          b
         </div>
       </div>
-
-    </div>
-    <br><br>
-
-    <div class="section">
+      <div class="row">
+        <div class="col s12" id="chart_line_2">
+          b
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12" id="chart_line_3">
+          b
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12" id="chart_line_4">
+          b
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12" id="chart_line_5">
+          b
+        </div>
+      </div>
 
     </div>
   </div>
@@ -113,16 +103,46 @@
   <script defer src="visjs/vis.js"></script>
 
   <script src="https://fb.me/react-with-addons-0.13.3.js"></script>
+  <script>
+    console.time('jsx compilation');
+  </script>
   <script src="https://fb.me/JSXTransformer-0.13.3.js">/* TODO: remove JSXTransformer, when code is ready */</script>
   <script type="text/jsx">
-    var globalState = {
-      selectedForexValue: "EUR/USD"
+    console.timeEnd('jsx compilation');
+    var globalState = function(field, value) {
+      /*
+        
+      */
+      if(arguments.length === 1) {
+        return globalState._data[field];
+      }
+      var oldVal = globalState._data[field];
+      globalState._data[field] = value;
+      if(value !== oldVal && globalState.on._data[field]) {
+        globalState.on._data[field].forEach(function(callback) {
+          callback(value, oldVal);
+        })
+      }
     };
+    globalState.set = globalState;
+    globalState.get = globalState;
+    globalState._data = {};
+
+    globalState.on = function(field, callback) {
+      globalState.on._data[field] || (globalState.on._data[field] = []);
+      globalState.on._data[field].push(callback);
+    };
+    globalState.on._data = {};
 
     var ForexValueButton = React.createClass({
       getInitialState: function () {
+        globalState.on('selectedForexValue', function(value) {
+          this.setState({
+            isActive: value === this.props.value
+          })
+        }.bind(this));
         return {
-          isActive: globalState.selectedForexValue === this.props.value
+          isActive: false
         }
       },
       render: function() {
@@ -136,9 +156,7 @@
       },
       handleClick: function(e) {
         e.preventDefault();
-        globalState.selectedForexValue = this.props.value;
-        $('#forex_values .btn.red').removeClass('red'); // HACK: until flux is provided
-        this.setState({isActive: true});
+        globalState.set("selectedForexValue", this.props.value);
       }
     });
     var ForexValuesButtons = React.createClass({
@@ -161,7 +179,7 @@
       render: function() {
         var buttons = this.state.values.map(function(value) {
           return <ForexValueButton value={value} key={value} />;
-        });
+        }.bind(this));
         return (
           <div>
             {buttons}
@@ -171,7 +189,87 @@
     });
 
     React.render(<ForexValuesButtons />, $('#forex_values').get(0))
-  </script>
+    
 
+    //visjs
+    var DELAY = 1000;
+    var dataset = new vis.DataSet();
+    var options = {
+      start: vis.moment().add(-30, 'seconds'), // changed so its faster
+      end: vis.moment(),
+      dataAxis: {
+        left: {
+          range: {
+            min:-10, max: 10
+          }
+        }
+      },
+      drawPoints: {
+        style: 'circle' // square, circle
+      },
+      shaded: {
+        orientation: 'bottom' // top, bottom
+      }
+    };
+    var graph2d = new vis.Graph2d($('#chart_line_1').get(0), dataset, options);
+
+
+  // a function to generate data points
+    function y(x) {
+      return (Math.sin(x / 2) + Math.cos(x / 4)) * 5;
+    }
+
+    function renderStep() {
+      // move the window (you can think of different strategies).
+      var now = vis.moment();
+      var range = graph2d.getWindow();
+      var interval = range.end - range.start;
+
+      graph2d.setWindow(now - interval, now, {animation: false});
+      setTimeout(renderStep, DELAY);
+    }
+    renderStep();
+
+    /**
+     * Add a new datapoint to the graph
+     */
+    function addDataPoint() {
+      // add a new data point to the dataset
+      var now = vis.moment();
+      dataset.add({
+        x: now,
+        y: y(now / 1000)
+      });
+
+      // remove all data points which are no longer visible
+      var range = graph2d.getWindow();
+      var interval = range.end - range.start;
+      var oldIds = dataset.getIds({
+        filter: function (item) {
+          return item.x < range.start - interval;
+        }
+      });
+      dataset.remove(oldIds);
+
+      setTimeout(addDataPoint, DELAY);
+    }
+    addDataPoint();
+
+
+
+
+
+
+
+
+
+
+    globalState.on("selectedForexValue", function() {
+      
+
+
+    });
+    globalState.set("selectedForexValue", "EUR/USD");
+  </script>
   </body>
 </html>

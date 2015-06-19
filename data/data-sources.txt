@@ -1,0 +1,27 @@
+webrates.truefx.com/rates/connect.html?f=csv
+http://webrates.truefx.com/rates/connect.html?f=html
+http://webrates.truefx.com/rates/connect.html?f=html&c=EUR/USD
+https://www.truefx.com/?page=download&description=may2015&dir=2015/MAY-2015 // archiwum!
+
+http://rates.fxcm.com/RatesXML3 > http://rates.fxcm.com/RatesXML
+
+http://www.xignite.com/forex (rejestracja, duzo danych)
+	http://globalcurrencies.xignite.com/xGlobalCurrencies.xml/ListActiveCurrencies
+
+
+https://www.quandl.com/resources/api-for-currency-data#Basic-Exchange-Rate-API-Usage
+
+
+---
+
+http://www.dailyfx.com/forex_forum/fxprogrammers/
+http://forexfeed.net/developers/php-forex-data-feed-api
+
+---???:
+http://finviz.com/
+
+
+http://quant.stackexchange.com/questions/141/what-data-sources-are-available-online
+https://openexchangerates.org/
+
+http://developer.oanda.com/rest-live/introduction/
