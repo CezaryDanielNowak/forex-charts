@@ -4,14 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Cezary Daniel Nowak",
   "license": "ISC",
   "dependencies": {
-    "copy-paste": "^1.1.2",
-    "finalhandler": "^0.4.0",
-    "nedb": "^1.1.2",
-    "serve-static": "^1.10.0"
+    "copy-paste": "1.1.2",
+    "finalhandler": "0.4.0",
+    "nedb": "1.1.2",
+    "serve-static": "1.10.0",
+  },
+  "devDependencies": {
+    "fast-csv": "0.6.0",
+    "unzip": "0.1.11"
   }
 }
