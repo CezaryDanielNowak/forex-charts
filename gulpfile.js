@@ -1,3 +1,5 @@
+'use strict';
+
 var gulp = require('gulp');
 var gutil = require("gulp-util");
 var webpack = require("webpack");
@@ -21,7 +23,7 @@ var webpackConfig = {
   entry: './src/main.js',
   devtool: 'source-map',
   output: {
-    path: path.join(__dirname, 'build'),
+    path: path.join(__dirname, 'public'),
     filename: 'all.js',
     sourceMapFilename: 'all.js.map',
     libraryTarget: 'umd'
@@ -29,7 +31,7 @@ var webpackConfig = {
   module: {
     loaders: [
       {
-        test: /(\.js|\.jsx)$/,
+        test: /(?:\.js|\.jsx)$/,
         exclude: /(?:node_modules|public)/,
         loader: 'babel',
         query: {
@@ -49,7 +51,7 @@ var webpackConfig = {
 
 
 gulp.task('default', [
-  'copy-bootstrap-assets',
+  'copy-assets',
   'webpack-watch',
   'build-css',
 ], function () {
@@ -79,7 +81,7 @@ gulp.task('webpack-watch', function(callback) {
   })
 });
 
-gulp.task('eslint', function () {
+gulp.task('eslint', function() {
   gulp
     .src(paths.scripts)
     .pipe(eslint())
@@ -87,22 +89,28 @@ gulp.task('eslint', function () {
 });
 
 
-gulp.task('build-css', function () {
+gulp.task('build-css', function() {
   gulp
     .src(paths.css)
     .pipe(concat('all.css'))
-    .pipe(gulp.dest('build/'))
+    .pipe(gulp.dest('public/'))
 });
 
 
-gulp.task('copy-bootstrap-assets', function () {
+gulp.task('copy-assets', function() {
+
   gulp
-    .src('node_modules/bootstrap/dist/fonts/*')
-    .pipe(gulp.dest('build/fonts'))
+    .src('node_modules/materialize-css/**')
+    .pipe(gulp.dest('public/css/materialize/'));
+
+  gulp
+    .src('node_modules/vis/dist/**')
+    .pipe(gulp.dest('public/js/vis/'));
+
 });
 
 
 gulp.task('build-production', ['build-css'], function (callback) {
   webpack(webpackConfig, callback)
-})
+});
 

@@ -1,2 +1,5 @@
 node_modules/
 data/*.nedb
+
+public/js/*.js
+public/css/*.css
