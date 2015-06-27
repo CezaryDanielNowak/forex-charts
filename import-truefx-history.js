@@ -1,3 +1,5 @@
+/* globals Promise, require */
+
 'use strict';
 
 var TRUEFX_DATA_PATH = './data/truefx-history/';
@@ -7,6 +9,10 @@ var fs = require('fs');
 var unzip = require('unzip');
 var Datastore = require('nedb');
 var csv = require("fast-csv");
+
+var crc = require('crc');
+var _id = 0; // autoindexing doesnt work well for nedb, create id manually
+
 
 var historyDB = new Datastore({
 	filename: TRUEFX_DATA_PATH + "history.nedb",
@@ -32,7 +38,6 @@ if(typeof Promise === "undefined") {
 	};
 }
 
-
 function startConversion(inputFileName) {
 	return new Promise(function(resolve, reject) {
 		historyDB.findOne({fileName: inputFileName}, function (err, doc) {
@@ -42,7 +47,9 @@ function startConversion(inputFileName) {
 			if(doc) {
 				return reject(inputFileName + " already converted");
 			}
-			fs.createReadStream(TRUEFX_DATA_PATH + inputFileName)
+			var readStream = fs.createReadStream(TRUEFX_DATA_PATH + inputFileName);
+
+			readStream
 			.pipe(unzip.Parse())
 			.on('entry', function (entry) {
 				var fileName = entry.path;
@@ -50,9 +57,18 @@ function startConversion(inputFileName) {
 				if (type === "File" && fileName.substr(-4) === '.csv') {
 					console.log("Unpacking... " + fileName);
 
+					var writeStream = fs.createWriteStream(TRUEFX_DATA_PATH + 'temp/data.csv');
 					// don't save filename, there is value column in CSV
-					entry.pipe(fs.createWriteStream(TRUEFX_DATA_PATH + 'temp/data.csv'));
-					resolve(TRUEFX_DATA_PATH + 'temp/data.csv', inputFileName);
+					entry.pipe(writeStream);
+					writeStream.on('close', function(argument) {
+						// save data completed.
+						readStream.close(); // no more data needed.
+						writeStream.close();
+						resolve({
+							csvFilePath: TRUEFX_DATA_PATH + 'temp/data.csv',
+							inputFileName: inputFileName
+						});
+					});
 				} else {
 					entry.autodrain();
 				}
@@ -66,7 +82,7 @@ function readCSV(csvFilePath, inputFileName) {
 	return new Promise(function(resolve, reject) {
 		var dbData = {};
 		var oldDBName = null;
-		console.log("Read CSV file: " + csvFilePath);
+		console.log("Read CSV file: " + csvFilePath + " from " + inputFileName);
 		var saveDbData = function(dbName) {
 			if(!dbName) {
 				return false;
@@ -103,6 +119,7 @@ function readCSV(csvFilePath, inputFileName) {
 			dateTime += data.dateTime.substr(6, 2) + 'T';
 			dateTime += data.dateTime.substr(9) + "Z"; // Z means UTC
 			data.dateTime = dateTime;
+			data._id = crc.crc32(dateTime + data.Low + data.High).toString(36) + '|' + (++_id).toString(36);
 
 			var dbName = dateTime.substr(0, 10) + "_" + data.value.replace('/', '');
 			if(!dbData[dbName]) {
@@ -117,7 +134,8 @@ function readCSV(csvFilePath, inputFileName) {
 			delete data.value;
 			dbData[dbName].push(data); // memory consumption will be painful, sorry
 
-		}).on("end", function(){
+		}).on("end", function() {
+			stream.close(); // XXX: autoClose isnt working by some reason.
 			// there should be one DB to save
 			var dbNames = Object.keys(dbData);
 			while(1) {
@@ -144,8 +162,8 @@ function start() {
 		console.log("FIN.");
 	}
 	startConversion(zipFile)
-	.then(function(csvFilePath, inputFileName) {
-		readCSV(csvFilePath, inputFileName).then(function () {
+	.then(function(args) {
+		readCSV(args.csvFilePath, args.inputFileName).then(function () {
 			start(); // start process again with next zip file.
 		});
 	})
