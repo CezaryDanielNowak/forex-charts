@@ -2,7 +2,7 @@ import globalState from 'globalState'
 
 class ForexValueButton extends React.Component {
 	static propTypes = {
-		value: React.PropTypes.text
+		value: React.PropTypes.string
 	}
 
 	constructor(props) {

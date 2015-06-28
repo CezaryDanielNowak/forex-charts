@@ -9,6 +9,7 @@
   },
   "globals": {
     "$": true,
+    "_": true,
     "vis": true,
     "React": true
   },

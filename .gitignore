@@ -1,7 +1,9 @@
+npm-debug.log
+
 node_modules/
 data/*.nedb
 
 public/js/*
-public/js/README.md
+!public/js/README.md
 public/css/*
 !public/css/README.md

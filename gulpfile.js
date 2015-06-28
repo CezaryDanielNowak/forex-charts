@@ -6,7 +6,8 @@ var webpack = require("webpack");
 var concat = require('gulp-concat');
 var eslint = require('gulp-eslint');
 var path = require('path');
-var extend = require('extend')
+var _ = require('lodash')
+var runServer = require('./_serve.js')
 
 
 var paths = {
@@ -57,14 +58,13 @@ gulp.task('default', [
 	'build-css',
 ], function (callback) {
 	gulp.watch(paths.css, ['build-css'])
-	//webpack(webpackConfig, callback)
 });
 
 gulp.task('webpack-watch', function(callback) {
 	var initialRun = true
 
 	webpack(
-		extend({}, webpackConfig, {
+		_.extend({}, webpackConfig, {
 			devtool: 'cheap-source-map' // http://webpack.github.io/docs/configuration.html
 		})
 	).watch({
@@ -72,6 +72,10 @@ gulp.task('webpack-watch', function(callback) {
 	}, function (err, stats) {
 		if (initialRun) {
 			initialRun = false
+			runServer({
+				path: "public/",
+				log: gutil.log.bind(gutil)
+			});
 			callback()
 		}
 		if(err) {
@@ -114,6 +118,10 @@ gulp.task('copy-assets', function() {
 	gulp
 		.src('node_modules/react/dist/**')
 		.pipe(gulp.dest('public/js/react/'));
+
+	gulp
+		.src('node_modules/lodash/index.js')
+		.pipe(gulp.dest('public/js/lodash'));
 
 });
 
