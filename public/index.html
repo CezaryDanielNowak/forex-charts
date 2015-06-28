@@ -3,10 +3,10 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
-  <title>Starter Template - Materialize</title>
+  <title>Forex charts</title>
 
   <!-- CSS  -->
-  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="css/materialize/bin/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
   <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
   <link href="visjs/vis.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 </head>
@@ -98,178 +98,13 @@
 
   <!--  Scripts-->
   <script defer src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-  <script defer src="js/materialize.js"></script>
-  <script defer src="js/init.js"></script>
-  <script defer src="visjs/vis.js"></script>
+  <script defer src="css/materialize/bin/materialize.js"></script>
+  <script defer src="js/vis/vis.min.js"></script>
+  <script defer src="js/react/react-with-addons.js"></script>
+  <script defer src="js/app.js"></script>
 
-  <script src="https://fb.me/react-with-addons-0.13.3.js"></script>
   <script>
-    console.time('jsx compilation');
-  </script>
-  <script src="https://fb.me/JSXTransformer-0.13.3.js">/* TODO: remove JSXTransformer, when code is ready */</script>
-  <script type="text/jsx">
-    console.timeEnd('jsx compilation');
-    var globalState = function(field, value) {
-      /*
-        
-      */
-      if(arguments.length === 1) {
-        return globalState._data[field];
-      }
-      var oldVal = globalState._data[field];
-      globalState._data[field] = value;
-      if(value !== oldVal && globalState.on._data[field]) {
-        globalState.on._data[field].forEach(function(callback) {
-          callback(value, oldVal);
-        })
-      }
-    };
-    globalState.set = globalState;
-    globalState.get = globalState;
-    globalState._data = {};
 
-    globalState.on = function(field, callback) {
-      globalState.on._data[field] || (globalState.on._data[field] = []);
-      globalState.on._data[field].push(callback);
-    };
-    globalState.on._data = {};
-
-    var ForexValueButton = React.createClass({
-      getInitialState: function () {
-        globalState.on('selectedForexValue', function(value) {
-          this.setState({
-            isActive: value === this.props.value
-          })
-        }.bind(this));
-        return {
-          isActive: false
-        }
-      },
-      render: function() {
-        var classNames = "waves-effect waves-light btn";
-        if(this.state.isActive) {
-          classNames += ' red';
-        }
-        return (
-          <a className={classNames} onClick={this.handleClick}>{this.props.value}</a>
-        );
-      },
-      handleClick: function(e) {
-        e.preventDefault();
-        globalState.set("selectedForexValue", this.props.value);
-      }
-    });
-    var ForexValuesButtons = React.createClass({
-      getInitialState: function() {
-        return {
-          values: [
-            'EUR/USD',
-            'USD/JPY',
-            'GBP/USD',
-            'EUR/GBP',
-            'USD/CHF',
-            'EUR/JPY',
-            'EUR/CHF',
-            'USD/CAD',
-            'AUD/USD',
-            'GBP/JPY'
-          ]
-        };
-      },
-      render: function() {
-        var buttons = this.state.values.map(function(value) {
-          return <ForexValueButton value={value} key={value} />;
-        }.bind(this));
-        return (
-          <div>
-            {buttons}
-          </div>
-        );
-      }
-    });
-
-    React.render(<ForexValuesButtons />, $('#forex_values').get(0))
-    
-
-    //visjs
-    var DELAY = 1000;
-    var dataset = new vis.DataSet();
-    var options = {
-      start: vis.moment().add(-30, 'seconds'), // changed so its faster
-      end: vis.moment(),
-      dataAxis: {
-        left: {
-          range: {
-            min:-10, max: 10
-          }
-        }
-      },
-      drawPoints: {
-        style: 'circle' // square, circle
-      },
-      shaded: {
-        orientation: 'bottom' // top, bottom
-      }
-    };
-    var graph2d = new vis.Graph2d($('#chart_line_1').get(0), dataset, options);
-
-
-  // a function to generate data points
-    function y(x) {
-      return (Math.sin(x / 2) + Math.cos(x / 4)) * 5;
-    }
-
-    function renderStep() {
-      // move the window (you can think of different strategies).
-      var now = vis.moment();
-      var range = graph2d.getWindow();
-      var interval = range.end - range.start;
-
-      graph2d.setWindow(now - interval, now, {animation: false});
-      setTimeout(renderStep, DELAY);
-    }
-    renderStep();
-
-    /**
-     * Add a new datapoint to the graph
-     */
-    function addDataPoint() {
-      // add a new data point to the dataset
-      var now = vis.moment();
-      dataset.add({
-        x: now,
-        y: y(now / 1000)
-      });
-
-      // remove all data points which are no longer visible
-      var range = graph2d.getWindow();
-      var interval = range.end - range.start;
-      var oldIds = dataset.getIds({
-        filter: function (item) {
-          return item.x < range.start - interval;
-        }
-      });
-      dataset.remove(oldIds);
-
-      setTimeout(addDataPoint, DELAY);
-    }
-    addDataPoint();
-
-
-
-
-
-
-
-
-//http://visjs.org/examples/graph2d/06_interpolation.html
-
-    globalState.on("selectedForexValue", function() {
-      
-      
-
-    });
-    globalState.set("selectedForexValue", "EUR/USD");
   </script>
   </body>
 </html>

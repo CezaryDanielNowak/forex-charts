@@ -10,12 +10,8 @@
   "author": "Cezary Daniel Nowak",
   "license": "ISC",
   "dependencies": {
-    "copy-paste": "1.1.2",
-    "express": "^4.13.0",
-    "finalhandler": "0.4.0",
     "materialize-css": "^0.96.1",
-    "nedb": "1.1.2",
-    "serve-static": "1.10.0",
+    "react": "^0.13.3",
     "vis": "^4.3.0"
   },
   "devDependencies": {
@@ -24,14 +20,21 @@
     "babel-eslint": "^3.1.19",
     "babel-loader": "^5.2.2",
     "babel-plugin-object-assign": "^1.2.0",
+    "copy-paste": "1.1.2",
     "crc": "3.3.0",
+    "eslint": "^0.24.0",
+    "eslint-plugin-react": "^2.5.2",
+    "express": "^4.13.0",
     "extend": "^2.0.1",
     "fast-csv": "0.6.0",
+    "finalhandler": "0.4.0",
     "gulp": "^3.9.0",
     "gulp-concat": "^2.6.0",
     "gulp-eslint": "^0.14.0",
     "gulp-util": "^3.0.6",
+    "nedb": "1.1.2",
     "node-libs-browser": "^0.5.2",
+    "serve-static": "1.10.0",
     "unzip": "0.1.11",
     "webpack": "^1.9.13"
   }

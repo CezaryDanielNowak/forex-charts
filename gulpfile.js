@@ -10,107 +10,115 @@ var extend = require('extend')
 
 
 var paths = {
-  scripts: [
-    'src/**/*.js',
-    'src/**/*.jsx'
-  ],
-  css: [
-    'src/**/*.css'
-  ]
+	scripts: [
+		'src/**/*.js',
+		'src/**/*.jsx'
+	],
+	css: [
+		'src/css/**/*.css'
+	]
 }
 
 var webpackConfig = {
-  entry: './src/main.js',
-  devtool: 'source-map',
-  output: {
-    path: path.join(__dirname, 'public'),
-    filename: 'all.js',
-    sourceMapFilename: 'all.js.map',
-    libraryTarget: 'umd'
-  },
-  module: {
-    loaders: [
-      {
-        test: /(?:\.js|\.jsx)$/,
-        exclude: /(?:node_modules|public)/,
-        loader: 'babel',
-        query: {
-          optional: ["es7.classProperties"],
-          plugins: ["object-assign"]
-        }
-      },
-    ]
-  },
-  resolve: {
-    root: [
-      path.join(__dirname, 'src')
-    ],
-    extensions: ['.js', '.jsx'],
-  }
+	context: path.join(__dirname, 'src'),
+	entry: 'initialize',
+	devtool: 'source-map',
+	output: {
+		path: path.join(__dirname, 'public', 'js'),
+		filename: 'app.js',
+		sourceMapFilename: 'app.js.map',
+		libraryTarget: 'umd'
+	},
+	module: {
+		loaders: [
+			{
+				test: /(\.js|\.jsx)$/,
+				exclude: /(node_modules|public)/,
+				loader: 'babel',
+				query: {
+					optional: ["es7.classProperties"],
+					plugins: ["object-assign"]
+				}
+			},
+		]
+	},
+	resolve: {
+		root: [
+			path.join(__dirname, 'src')
+		],
+		extensions: ['.js', '.jsx'],
+	}
 }
 
 
 gulp.task('default', [
-  'copy-assets',
-  'webpack-watch',
-  'build-css',
-], function () {
-  gulp.watch(paths.css, ['build-css'])
+	'copy-assets',
+	'webpack-watch',
+	'build-css',
+], function (callback) {
+	gulp.watch(paths.css, ['build-css'])
+	//webpack(webpackConfig, callback)
 });
 
 gulp.task('webpack-watch', function(callback) {
-  var initialRun = true
+	var initialRun = true
 
-  webpack(
-    extend({}, webpackConfig, {
-      devtool: 'cheap-module-eval-source-map'
-    })
-  ).watch({
-    poll: true
-  }, function (err, stats) {
-    if (initialRun) {
-      initialRun = false
-      callback()
-    }
-    if(err) throw new gutil.PluginError("webpack", err);
-    gutil.log("[webpack]", stats.toString({
-      timing: true,
-      cached: false
-    }));
-    gulp.start('eslint')
-  })
+	webpack(
+		extend({}, webpackConfig, {
+			devtool: 'cheap-source-map' // http://webpack.github.io/docs/configuration.html
+		})
+	).watch({
+		poll: true
+	}, function (err, stats) {
+		if (initialRun) {
+			initialRun = false
+			callback()
+		}
+		if(err) {
+			throw new gutil.PluginError("webpack", err);
+		}
+		gutil.log("[webpack]", stats.toString({
+			timing: true,
+			cached: false
+		}));
+		gulp.start('eslint')
+	})
 });
 
 gulp.task('eslint', function() {
-  gulp
-    .src(paths.scripts)
-    .pipe(eslint())
-    .pipe(eslint.format())
+	gulp
+		.src(paths.scripts)
+		.pipe(eslint())
+		.pipe(eslint.format())
 });
 
 
 gulp.task('build-css', function() {
-  gulp
-    .src(paths.css)
-    .pipe(concat('all.css'))
-    .pipe(gulp.dest('public/'))
+	gulp
+		.src(paths.css)
+		.pipe(concat('style.css'))
+		.pipe(gulp.dest('public/css'))
 });
 
 
 gulp.task('copy-assets', function() {
 
-  gulp
-    .src('node_modules/materialize-css/**')
-    .pipe(gulp.dest('public/css/materialize/'));
+	gulp
+		.src('node_modules/materialize-css/**')
+		.pipe(gulp.dest('public/css/materialize/'));
 
-  gulp
-    .src('node_modules/vis/dist/**')
-    .pipe(gulp.dest('public/js/vis/'));
+	gulp
+		.src('node_modules/vis/dist/**')
+		.pipe(gulp.dest('public/js/vis/'));
+
+	gulp
+		.src('node_modules/react/dist/**')
+		.pipe(gulp.dest('public/js/react/'));
 
 });
 
 
 gulp.task('build-production', ['build-css'], function (callback) {
-  webpack(webpackConfig, callback)
+	webpack(webpackConfig, callback)
 });
 

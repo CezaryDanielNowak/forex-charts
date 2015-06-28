@@ -1,5 +1,7 @@
 node_modules/
 data/*.nedb
 
-public/js/*.js
-public/css/*.css
+public/js/*
+public/js/README.md
+public/css/*
+!public/css/README.md
