@@ -1,3 +1,14 @@
 body {
 	color: #000;
 }
+.global-progress {
+	display: none;
+	position: absolute;
+	top: 52px;
+	left: 0;
+	right: 0;
+}
+
+body.is-loading .global-progress {
+	display: block;
+}

@@ -1,8 +1,9 @@
+import util from 'util'
 import globalState from 'globalState'
 import ForexValuesButtons from 'components/ForexValuesButtons'
 
 
-export default function() {
+export default function init() {
 	React.render(<ForexValuesButtons />, $('#forex_values').get(0))
 
 	// visjs
@@ -74,5 +75,9 @@ export default function() {
 
 	globalState.on('selectedForexValue', function() {})
 	globalState.set('selectedForexValue', 'EUR/USD')
+
+
+	util.showProgress(document.body, false)
 }
 
+init()

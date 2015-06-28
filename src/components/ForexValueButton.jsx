@@ -29,7 +29,7 @@ class ForexValueButton extends React.Component {
 			classNames += ' red'
 		}
 		return (
-			<a className={classNames} onClick={this.handleClick}>{this.props.value}</a>
+			<a className={classNames} onClick={this.handleClick.bind(this)}>{this.props.value}</a>
 		)
 	}
 }

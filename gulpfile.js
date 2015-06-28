@@ -22,7 +22,7 @@ var paths = {
 
 var webpackConfig = {
 	context: path.join(__dirname, 'src'),
-	entry: 'initialize',
+	entry: 'init',
 	devtool: 'source-map',
 	output: {
 		path: path.join(__dirname, 'public', 'js'),
