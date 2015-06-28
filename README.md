@@ -40,7 +40,6 @@ You can use few globals in your plugins:
 "$": jQuery,
 "_": Lodash,
 "vis": VisJS,
-"React": ReactJS,
 "console": browser console. It's polyfilled in browsers without console.
 
 Scaffold

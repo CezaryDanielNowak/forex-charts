@@ -1,3 +1,4 @@
+import React from 'react'
 import globalState from 'globalState'
 
 class ForexValueButton extends React.Component {

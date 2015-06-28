@@ -1,3 +1,4 @@
+import React from 'react'
 import ForexValueButton from 'components/ForexValueButton'
 
 class ForexValuesButtons extends React.Component {

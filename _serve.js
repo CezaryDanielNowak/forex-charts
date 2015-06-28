@@ -12,22 +12,30 @@ configDefault = {
 module.exports = function start(config) {
 	config = _.extend(configDefault, config);
 
-	// Serve up public/ftp folder 
+	// Serve up public/ftp folder
 	var serve = serveStatic('./public', {
 		'index': ['index.html']
 	});
-	 
-	// Create server 
+
+	// Create server
 	var server = http.createServer(function(req, res) {
 		var done = finalhandler(req, res)
 		serve(req, res, done)
 	})
-	 
-	// Listen 
+
+	// Listen
 	config.log("listening localhost:3000...")
 	server.listen(3000)
 
-	copyPaste.copy("http://127.0.0.1:3000", function() {
-		config.log("http://127.0.0.1:3000 is saved in your clipboard")
+	copyPaste.paste(function(data) {
+		if(data) {
+			return; // We don't want to override clipboard.
+		}
+		copyPaste.copy("http://127.0.0.1:3000", function() {
+			config.log("http://127.0.0.1:3000 is saved in your clipboard")
+		});
 	});
+
+
+
 };
