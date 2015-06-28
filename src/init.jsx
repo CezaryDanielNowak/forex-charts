@@ -2,7 +2,6 @@ import util from 'util'
 import globalState from 'globalState'
 import ForexValuesButtons from 'components/ForexValuesButtons'
 
-
 export default function init() {
 	React.render(<ForexValuesButtons />, $('#forex_values').get(0))
 
@@ -80,4 +79,38 @@ export default function init() {
 	util.showProgress(document.body, false)
 }
 
+function polifill() {
+	// TODO: synchronouse request to: https://github.com/es-shims/es5-shim
+
+
+	// Console-polyfill. MIT license.
+	// https://github.com/paulmillr/console-polyfill
+	// Make it safe to do console.log() always.
+	// Edit: assert throws error, ES6 syntax.
+	(function(global) {
+		global.console = global.console || {}
+		let con = global.console
+		let prop
+		let method
+		let empty = {}
+		let dummy = function() {}
+		let properties = 'memory'.split(',')
+		let methods = ('clear,count,debug,dir,dirxml,error,exception,group,' +
+			'groupCollapsed,groupEnd,info,log,markTimeline,profile,profiles,profileEnd,' +
+			'show,table,time,timeEnd,timeline,timelineEnd,timeStamp,trace,warn').split(',')
+		while (prop = properties.pop()) if (!con[prop]) con[prop] = empty
+		while (method = methods.pop()) if (!con[method]) con[method] = dummy
+
+		con.assert = function(assertion, errorMsg) {
+			if (!assertion) {
+				throw {
+					name: 'AssertionError',
+					message: errorMsg
+				}
+			}
+		}
+	})(typeof window === 'undefined' ? this : window)
+}
+
+polifill()
 init()

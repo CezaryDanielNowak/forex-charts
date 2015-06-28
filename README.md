@@ -34,6 +34,15 @@ import YourPluginWidget from 'plugins/YourPlugin/Widget'
 React.render(YourPluginWidget, $('#containerX').get(0))
 ```
 
+Globals
+----
+You can use few globals in your plugins:
+"$": jQuery,
+"_": Lodash,
+"vis": VisJS,
+"React": ReactJS,
+"console": browser console. It's polyfilled in browsers without console.
+
 Scaffold
 ====
 history entries will be saved as:
