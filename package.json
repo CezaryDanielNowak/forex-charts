@@ -11,10 +11,12 @@
   "author": "Cezary Daniel Nowak",
   "license": "ISC",
   "dependencies": {
+    "bootstrap": "3.3.5",
     "lodash": "3.9.3",
+    "rdash-ui": "https://github.com/rdash/rdash-ui/archive/958c12d441eeb9f917d56641a035c7be82aea5c5.tar.gz",
     "react": "0.13.3",
-    "material-ui": "0.9.2",
-    "react-tap-event-plugin": "0.1.7",
+    "react-mixin": "^1.4.0",
+    "tota11y": "0.0.3",
     "vis": "4.3.0"
   },
   "devDependencies": {

@@ -117,8 +117,12 @@ gulp.task('copy-assets', function() {
 		.pipe(gulp.dest('public/js/vis/'));
 
 	gulp
-		.src('node_modules/react/dist/**')
-		.pipe(gulp.dest('public/js/react/'));
+		.src('node_modules/bootstrap/dist/**')
+		.pipe(gulp.dest('public/css/bootstrap/'));
+
+	gulp
+		.src('node_modules/rdash-ui/dist/**') // http://rdash.github.io/#/
+		.pipe(gulp.dest('public/css/bootstrap-theme-rdash/'));
 
 	gulp
 		.src('node_modules/lodash/index.js')
