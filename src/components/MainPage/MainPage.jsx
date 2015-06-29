@@ -2,67 +2,140 @@ import React from 'react'
 import util from 'util'
 import globalState from 'globalState'
 import ForexValuesButtons from 'components/ForexValuesButtons'
-import mui from 'material-ui'
-import {Toolbar, ToolbarGroup, DropDownMenu, ToolbarTitle, FontIcon, DropDownIcon, ToolbarSeparator, RaisedButton} from 'material-ui'
-
-let Dialog = mui.Dialog
-let ThemeManager = new mui.Styles.ThemeManager()
-let Colors = mui.Styles.Colors
+import ChildToggler from 'components/ChildToggler'
 
 export default class MainPage extends React.Component {
-	static childContextTypes = {
-		muiTheme: React.PropTypes.object
-	}
-	getChildContext() {
-		return {
-			muiTheme: ThemeManager.getCurrentTheme()
+	constructor(props) {
+		super(props)
+		this.state = {
+			isSidebarOpen: true
 		}
 	}
 
-	componentWillMount() {
-		ThemeManager.setPalette({
-			accent1Color: Colors.deepOrange500
-		})
-	}
-
-	_handleTouchTap() {
-		this.refs.superSecretPasswordDialog.show()
+	toggleState(stateField, e) {
+		e.preventDefault()
+		let newState = {}
+		newState[stateField] = !this.state[stateField]
+		this.setState(newState)
 	}
 
 	render() {
-		let filterOptions = [
-			{ payload: '1', text: 'All Broadcasts' },
-			{ payload: '2', text: 'All Voice' },
-			{ payload: '3', text: 'All Text' },
-			{ payload: '4', text: 'Complete Voice' },
-			{ payload: '5', text: 'Complete Text' },
-			{ payload: '6', text: 'Active Voice' },
-			{ payload: '7', text: 'Active Text' }
-		]
-		let iconMenuItems = [
-			{ payload: '1', text: 'Download' },
-			{ payload: '2', text: 'More Info' }
-		]
+		let state = this.state
 		return (
-			<div>
-				<Toolbar>
-					<ToolbarGroup key={0} float="left">
-						<DropDownMenu menuItems={filterOptions} />
-					</ToolbarGroup>
-					<ToolbarGroup key={1} float="right">
-						<ToolbarTitle text="Options" />
-						<FontIcon className="mui-icon-sort" />
-						<DropDownIcon iconClassName="icon-navigation-expand-more" menuItems={iconMenuItems} />
-						<ToolbarSeparator/>
-						<RaisedButton label="Create Broadcast" primary={true} />
-					</ToolbarGroup>
-				</Toolbar>
+			<div id="page-wrapper" className={state.isSidebarOpen ? 'open' : ''}>
+				<div id="sidebar-wrapper">
+					<ul className="sidebar">
+						<li className="sidebar-main">
+							<a href="#" onClick={this.toggleState.bind(this, "isSidebarOpen")}>
+								Dashboard
+								<span className="menu-icon glyphicon glyphicon-transfer"></span>
+							</a>
+						</li>
+						<li className="sidebar-title"><span>NAVIGATION</span></li>
+						<li className="sidebar-list">
+							<a href="#">Dashboard <span className="menu-icon fa fa-tachometer"></span></a>
+						</li>
+					</ul>
+					<div className="sidebar-footer">
+						<div className="col-xs-4">
+							<a href="https://github.com/rdash/rdash-barebones" target="_blank">
+								Github
+							</a>
+						</div>
+						<div className="col-xs-4">
+							<a href="#" target="_blank">
+								About
+							</a>
+						</div>
+						<div className="col-xs-4">
+							<a href="#">
+								Support
+							</a>
+						</div>
+					</div>
+				</div>
 
-				<h1>material-ui</h1>
-				<h2>example project</h2>
 
-				<RaisedButton label="Super Secret Password" primary={true} onTouchTap={this._handleTouchTap} />
+				<div id="content-wrapper">
+					<div className="page-content">
+						<div className="row header">
+							<div className="col-xs-12">
+								<div className="user pull-right">
+									<div className="item dropdown">
+										<a href="#" className="dropdown-toggle">
+											<ChildToggler className="widget-icon red">
+												<i className="fa fa-eur" key="eur"></i>
+												<i className="fa fa-inr" key="inr"></i>
+												<i className="fa fa-jpy" key="jpy"></i>
+												<i className="fa fa-try" key="try"></i>
+												<i className="fa fa-rub" key="rub"></i>
+												<i className="fa fa-ils" key="ils"></i>
+												<i className="fa fa-usd" key="usd"></i>
+												<i className="fa fa-gbp" key="gbp"></i>
+												<i className="fa fa-krw" key="krw"></i>
+												<i className="fa fa-money" key="money"></i>
+											</ChildToggler>
+										</a>
+										<ul className="dropdown-menu dropdown-menu-right">
+											<li className="dropdown-header">
+												Joe Bloggs
+											</li>
+											<li className="divider"></li>
+											<li className="link">
+												<a href="#">
+													Profile
+												</a>
+											</li>
+											<li className="link">
+												<a href="#">
+													Menu Item
+												</a>
+											</li>
+											<li className="divider"></li>
+											<li className="link">
+												<a href="#">
+													Logout
+												</a>
+											</li>
+										</ul>
+									</div>
+									<div className="item dropdown">
+										<a href="#" className="dropdown-toggle">
+											<i className="fa fa-bell-o"></i>
+										</a>
+										<ul className="dropdown-menu dropdown-menu-right">
+											<li className="dropdown-header">
+												Notifications
+											</li>
+											<li className="divider"></li>
+											<li>
+												<a href="#">Server Down!</a>
+											</li>
+										</ul>
+									</div>
+								</div>
+								<div className="meta">
+									<div className="page">
+										Dashboard
+									</div>
+									<div className="breadcrumb-links">
+										Home / Dashboard
+									</div>
+								</div>
+							</div>
+						</div>
 
+						<div className="row">
+							<div className="col-xs-12">
+								<div className="widget">
+									<div className="widget-body">
+										Get started!
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		)
 	}
