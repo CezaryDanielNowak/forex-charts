@@ -26,7 +26,7 @@ export default class MainPage extends React.Component {
 				<div id="sidebar-wrapper">
 					<ul className="sidebar">
 						<li className="sidebar-main">
-							<a href="#" onClick={this.toggleState.bind(this, "isSidebarOpen")}>
+							<a href="#" onClick={this.toggleState.bind(this, 'isSidebarOpen')}>
 								Dashboard
 								<span className="menu-icon glyphicon glyphicon-transfer"></span>
 							</a>

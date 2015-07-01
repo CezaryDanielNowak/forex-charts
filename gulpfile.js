@@ -1,11 +1,11 @@
 'use strict';
 
-var gulp = require('gulp');
-var gutil = require("gulp-util");
-var webpack = require("webpack");
-var concat = require('gulp-concat');
-var eslint = require('gulp-eslint');
-var path = require('path');
+var gulp = require('gulp')
+var gutil = require("gulp-util")
+var webpack = require("webpack")
+var concat = require('gulp-concat')
+var eslint = require('gulp-eslint')
+var path = require('path')
 var _ = require('lodash')
 var runServer = require('./_serve.js')
 
@@ -37,7 +37,10 @@ var webpackConfig = {
 				exclude: /(node_modules|public)/,
 				loader: 'babel',
 				query: {
-					optional: ["es7.classProperties"],
+					optional: [
+						"es7.classProperties", // https://babeljs.io/docs/usage/experimental/
+						"runtime" // https://babeljs.io/docs/usage/runtime/
+					],
 					plugins: ["object-assign"]
 				}
 			},
