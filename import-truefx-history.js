@@ -7,13 +7,12 @@ var OUTPUT_DATA_PATH = './data/';
 
 var fs = require('fs');
 var unzip = require('unzip');
-var Datastore = require('nedb');
 var csv = require("fast-csv");
 
-var crc = require('crc');
-var _id = 0; // autoindexing doesnt work well for nedb, create id manually
+var config = require('./config.js');
+var knex = config.db.getKnex();
 
-
+var Datastore = require('nedb');
 var historyDB = new Datastore({
 	filename: TRUEFX_DATA_PATH + "history.nedb",
 	autoload: true
@@ -27,8 +26,6 @@ var historyDB = new Datastore({
 	How to use it?
 	- download historical data from: https://www.truefx.com/dev/data/2015/
 	- save it in ./data/truefx-history
-
-
 */
 
 if(typeof Promise === "undefined") {
@@ -53,7 +50,7 @@ function startConversion(inputFileName) {
 			.pipe(unzip.Parse())
 			.on('entry', function (entry) {
 				var fileName = entry.path;
-				var type = entry.type; // 'Directory' or 'File' 
+				var type = entry.type; // 'Directory' or 'File'
 				if (type === "File" && fileName.substr(-4) === '.csv') {
 					console.log("Unpacking... " + fileName);
 
@@ -87,24 +84,27 @@ function readCSV(csvFilePath, inputFileName) {
 			if(!dbName) {
 				return false;
 			}
+			if(!dbData[dbName]) {
+				console.error('ERROR: No dbName: ', dbName);
+			}
 			console.log("Save dict to DB: " + dbName);
-			new Datastore({
-				filename: OUTPUT_DATA_PATH + dbName + ".nedb",
-				autoload: true
-			}).insert(dbData[dbName], function(err) {
-				if(err) {
-					console.error("unhandled error", err);
-					return;
-				}
-				delete dbData[dbName];
+
+			knex("truefx-raw")
+			.insert(dbData[dbName])
+			.then(function(response) {
+				console.log(dbName, "data saved to DB.");
+			}).catch(function() {
+				console.warn("truefx-raw data not inserted", arguments);
 			});
+
+			delete dbData[dbName]; // it probably should be inside knex(...).then(), but lets try this :-)
 			return true;
 		};
 		var stream = fs.createReadStream(csvFilePath);
 
 		csv
 		.fromStream(stream, {
-			headers : ["value", "dateTime", "Low", "High"]
+			headers : ["value", "time", "min", "max"]
 		}).on("data", function(data){
 			/*
 			sample data:
@@ -114,12 +114,11 @@ function readCSV(csvFilePath, inputFileName) {
 			  High: '119.902' }
 			*/
 			// create ISO String
-			var dateTime = data.dateTime.substr(0, 4) + '-';
-			dateTime += data.dateTime.substr(4, 2) + '-';
-			dateTime += data.dateTime.substr(6, 2) + 'T';
-			dateTime += data.dateTime.substr(9) + "Z"; // Z means UTC
-			data.dateTime = dateTime;
-			data._id = crc.crc32(dateTime + data.Low + data.High).toString(36) + '|' + (++_id).toString(36);
+			var dateTime = data.time.substr(0, 4) + '-';
+			dateTime += data.time.substr(4, 2) + '-';
+			dateTime += data.time.substr(6, 2) + ' ';
+			dateTime += data.time.substr(9) + "+00"; // 2013-08-26 12:17:51.123905+00
+			data.time = dateTime;
 
 			var dbName = dateTime.substr(0, 10) + "_" + data.value.replace('/', '');
 			if(!dbData[dbName]) {
@@ -131,7 +130,6 @@ function readCSV(csvFilePath, inputFileName) {
 				dbData[dbName] = [];
 			}
 
-			delete data.value;
 			dbData[dbName].push(data); // memory consumption will be painful, sorry
 
 		}).on("end", function() {
@@ -171,7 +169,7 @@ function start() {
 		console.log(err);
 		start();
 	});
-	
+
 }
 
 start();

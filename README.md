@@ -6,7 +6,9 @@ Installation:
 ====
 - install `nodejs` + `npm`
 - install global `gulp` by npm
-- install `MongoDB`
+- install `PostgreSQL`
+- create db structure (TODO)
+- modify/create config.local with valid db data
 - install local dependencies `npm install`
 
 Running
@@ -19,9 +21,10 @@ Front-end:
 - each chart configured as a separate widget/addon
 - fibonacci analysis (fibotrader isn't really user-friendly)
 - compare data week-to-week
+- heatmap (pips/min)
 
 Back-end:
-- Rewrite import script to MongoDB
+- Rewrite import script to PostgreSQL
 
 
 Building Plugins
