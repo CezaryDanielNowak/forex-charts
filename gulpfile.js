@@ -1,8 +1,9 @@
-'use strict';
+/* eslint-disable */
+'use strict'
 
 var gulp = require('gulp')
-var gutil = require("gulp-util")
-var webpack = require("webpack")
+var gutil = require('gulp-util')
+var webpack = require('webpack')
 var concat = require('gulp-concat')
 var eslint = require('gulp-eslint')
 var path = require('path')
@@ -38,10 +39,10 @@ var webpackConfig = {
 				loader: 'babel',
 				query: {
 					optional: [
-						"es7.classProperties", // https://babeljs.io/docs/usage/experimental/
-						"runtime" // https://babeljs.io/docs/usage/runtime/
+						'es7.classProperties', // https://babeljs.io/docs/usage/experimental/
+						'runtime' // https://babeljs.io/docs/usage/runtime/
 					],
-					plugins: ["object-assign"]
+					plugins: ['object-assign']
 				}
 			},
 		]
@@ -62,7 +63,8 @@ gulp.task('default', [
 	'build-css',
 ], function (callback) {
 	gulp.watch(paths.css, ['build-css'])
-});
+})
+
 
 gulp.task('webpack-watch', function(callback) {
 	var initialRun = true
@@ -72,33 +74,35 @@ gulp.task('webpack-watch', function(callback) {
 			devtool: 'cheap-source-map' // http://webpack.github.io/docs/configuration.html
 		})
 	).watch({
-		poll: true
+	    aggregateTimeout: 300,
+	    poll: 500
 	}, function (err, stats) {
 		if (initialRun) {
 			initialRun = false
 			runServer({
-				path: "public/",
-				log: gutil.log.bind(gutil)
-			});
+				path: 'public/',
+				logFunc: gutil.log.bind(gutil)
+			})
 			callback()
 		}
 		if(err) {
-			throw new gutil.PluginError("webpack", err);
+			throw new gutil.PluginError('webpack', err)
 		}
-		gutil.log("[webpack]", stats.toString({
+		gutil.log('[webpack]', stats.toString({
 			timing: true,
 			cached: false
-		}));
+		}))
 		gulp.start('eslint')
 	})
-});
+})
+
 
 gulp.task('eslint', function() {
 	gulp
 		.src(paths.scripts)
 		.pipe(eslint())
 		.pipe(eslint.format())
-});
+})
 
 
 gulp.task('build-css', function() {
@@ -106,35 +110,34 @@ gulp.task('build-css', function() {
 		.src(paths.css)
 		.pipe(concat('style.css'))
 		.pipe(gulp.dest('public/css'))
-});
+})
 
 
 gulp.task('copy-assets', function() {
 
 	gulp
 		.src('node_modules/materialize-css/**')
-		.pipe(gulp.dest('public/css/materialize/'));
+		.pipe(gulp.dest('public/css/materialize/'))
 
 	gulp
 		.src('node_modules/vis/dist/**')
-		.pipe(gulp.dest('public/js/vis/'));
+		.pipe(gulp.dest('public/js/vis/'))
 
 	gulp
 		.src('node_modules/bootstrap/dist/**')
-		.pipe(gulp.dest('public/css/bootstrap/'));
+		.pipe(gulp.dest('public/css/bootstrap/'))
 
 	gulp
 		.src('node_modules/rdash-ui/dist/**') // http://rdash.github.io/#/
-		.pipe(gulp.dest('public/css/bootstrap-theme-rdash/'));
+		.pipe(gulp.dest('public/css/bootstrap-theme-rdash/'))
 
 	gulp
 		.src('node_modules/lodash/index.js')
-		.pipe(gulp.dest('public/js/lodash'));
+		.pipe(gulp.dest('public/js/lodash'))
 
-});
+})
 
 
 gulp.task('build-production', ['build-css'], function (callback) {
 	webpack(webpackConfig, callback)
-});
-
+})

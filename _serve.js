@@ -1,21 +1,25 @@
-var finalhandler = require('finalhandler');
-var http = require('http');
-var serveStatic = require('serve-static');
-var copyPaste = require("copy-paste");
-var _ = require('lodash');
+/* eslint-disable */
+'use strict'
 
-configDefault = {
-	path: "./",
-	log: console.log
-};
+var finalhandler = require('finalhandler')
+var http = require('http')
+var serveStatic = require('serve-static')
+var copyPaste = require('copy-paste')
+var _ = require('lodash')
+
+var configDefault = {
+	path: './',
+	logFunc: console.log,
+	clipboard: true
+}
 
 module.exports = function start(config) {
-	config = _.extend(configDefault, config);
+	config = _.merge(configDefault, config)
 
 	// Serve up public/ftp folder
 	var serve = serveStatic('./public', {
 		'index': ['index.html']
-	});
+	})
 
 	// Create server
 	var server = http.createServer(function(req, res) {
@@ -24,18 +28,16 @@ module.exports = function start(config) {
 	})
 
 	// Listen
-	config.log("listening localhost:3000...")
+	config.logFunc('listening localhost:3000...')
 	server.listen(3000)
-
-	copyPaste.paste(function(data) {
-		if(data) {
-			return; // We don't want to override clipboard.
-		}
-		copyPaste.copy("http://127.0.0.1:3000", function() {
-			config.log("http://127.0.0.1:3000 is saved in your clipboard")
-		});
-	});
-
-
-
-};
+	if (config.clipboard) {
+		copyPaste.paste(function(data) {
+			if(data) {
+				return // We don't want to override clipboard.
+			}
+			copyPaste.copy('http://127.0.0.1:3000', function() {
+				config.logFunc('http://127.0.0.1:3000 is saved in your clipboard')
+			})
+		})
+	}
+}

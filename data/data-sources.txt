@@ -25,3 +25,7 @@ http://quant.stackexchange.com/questions/141/what-data-sources-are-available-onl
 https://openexchangerates.org/
 
 http://developer.oanda.com/rest-live/introduction/
+
+---
+
+http://stackoverflow.com/questions/3139879/how-do-i-get-currency-exchange-rates-via-an-api-such-as-google-finance

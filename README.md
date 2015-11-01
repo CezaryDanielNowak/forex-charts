@@ -22,6 +22,7 @@ Front-end:
 - fibonacci analysis (fibotrader isn't really user-friendly)
 - compare data week-to-week
 - heatmap (pips/min)
+- average percentage fluctuations (to help measure the scale)
 
 Back-end:
 - Rewrite import script to PostgreSQL
