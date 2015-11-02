@@ -1,7 +1,13 @@
 import React from 'react'
 import ForexValueButton from 'components/ForexValueButton'
+import BaseComponent from 'components/base/BaseComponent'
 
-class ForexValuesButtons extends React.Component {
+class ForexValuesButtons extends BaseComponent {
+
+	static propTypes = {
+		children: React.PropTypes.array
+	}
+
 	constructor(props) {
 		super(props)
 		this.state = {
@@ -20,14 +26,18 @@ class ForexValuesButtons extends React.Component {
 		}
 	}
 
-	render() {
-		let buttons = this.state.values.map(function(value) {
+	renderButtons() {
+		return this.state.values.map(function(value) {
 			return <ForexValueButton value={value} key={value} />
 		})
+	}
+
+	render() {
 		return (
-			<div>
-				{buttons}
-			</div>
+			<ul className={this.getClassName()}>
+				{this.props.children}
+				{this.renderButtons()}
+			</ul>
 		)
 	}
 }

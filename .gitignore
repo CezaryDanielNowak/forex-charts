@@ -6,5 +6,8 @@ data/*.nedb
 
 public/js/*
 !public/js/README.md
+
 public/css/*
 !public/css/README.md
+
+_wip/
