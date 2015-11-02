@@ -1,6 +1,5 @@
 import React from 'react'
-import util from 'util'
-import globalState from 'globalState'
+import globalStore from 'globalStore'
 import ForexValuesButtons from 'components/ForexValuesButtons'
 import ChildToggler from 'components/ChildToggler'
 
@@ -99,8 +98,9 @@ export default class MainPage extends React.Component {
 											</li>
 										</ul>
 									</div>
+
 									<div className="item dropdown">
-										<a href="#" className="dropdown-toggle">
+										<a href="#" className="dropdown-toggle" data-toggle="dropdown">
 											<i className="fa fa-bell-o"></i>
 										</a>
 										<ul className="dropdown-menu dropdown-menu-right">
@@ -109,10 +109,23 @@ export default class MainPage extends React.Component {
 											</li>
 											<li className="divider"></li>
 											<li>
-												<a href="#">Server Down!</a>
+												<a href="#">Nothing here...</a>
 											</li>
 										</ul>
 									</div>
+
+									<div className="item dropdown">
+										<a href="#" className="dropdown-toggle" data-toggle="dropdown">
+											<i className="fa fa-money"></i>
+										</a>
+										<ForexValuesButtons className="dropdown-menu dropdown-menu-right">
+											<li className="dropdown-header">
+												Switch currency
+											</li>
+											<li className="divider"></li>
+										</ForexValuesButtons>
+									</div>
+
 								</div>
 								<div className="meta">
 									<div className="page">

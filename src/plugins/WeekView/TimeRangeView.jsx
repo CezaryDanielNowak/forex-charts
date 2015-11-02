@@ -1,5 +1,5 @@
 import React from 'react'
-import globalState from 'globalState'
+import globalStore from 'globalStore'
 
 class TimeRangeView extends React.Component {
 	static propTypes = {

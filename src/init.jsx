@@ -1,6 +1,6 @@
 import React from 'react'
 import util from 'util'
-import globalState from 'globalState'
+import globalStore from 'globalStore'
 import ForexValuesButtons from 'components/ForexValuesButtons'
 import MainPage from 'components/MainPage/MainPage'
 
@@ -76,8 +76,8 @@ export default function init() {
 
 	// // http://visjs.org/examples/graph2d/06_interpolation.html
 
-	// globalState.on('selectedForexValue', function() {})
-	// globalState.set('selectedForexValue', 'EUR/USD')
+	// globalStore.on('selectedForexValue', function() {})
+	// globalStore.set('selectedForexValue', 'EUR/USD')
 
 
 	util.showProgress(document.body, false)

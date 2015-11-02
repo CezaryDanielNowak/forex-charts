@@ -1,5 +1,5 @@
 import React from 'react'
-import globalState from 'globalState'
+import globalStore from 'globalStore'
 
 class ForexValueButton extends React.Component {
 	static propTypes = {
@@ -8,7 +8,7 @@ class ForexValueButton extends React.Component {
 
 	constructor(props) {
 		super(props)
-		globalState.on('selectedForexValue', function(value) {
+		globalStore.on('selectedForexValue', function(value) {
 			this.setState({
 				isActive: value === this.props.value
 			})
@@ -21,7 +21,7 @@ class ForexValueButton extends React.Component {
 
 	handleClick(e) {
 		e.preventDefault()
-		globalState.set('selectedForexValue', this.props.value)
+		globalStore.set('selectedForexValue', this.props.value)
 	}
 
 	render() {
@@ -30,7 +30,9 @@ class ForexValueButton extends React.Component {
 			classNames += ' red'
 		}
 		return (
-			<a className={classNames} onClick={this.handleClick.bind(this)}>{this.props.value}</a>
+			<li>
+				<a className={classNames} onClick={this.handleClick.bind(this)}>{this.props.value}</a>
+			</li>
 		)
 	}
 }
