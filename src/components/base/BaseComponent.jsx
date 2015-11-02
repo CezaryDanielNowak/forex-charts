@@ -3,6 +3,10 @@ import _ from 'lodash'
 
 export default class BaseComponent extends React.Component {
 
+	static propTypes = {
+		className: React.PropTypes.string
+	}
+
 	getClassNameString(classNameAddon) {
 		if (_.isPlainObject(classNameAddon)) {
 			// pick non-falsy elements in the object.

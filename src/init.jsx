@@ -1,7 +1,5 @@
 import React from 'react'
 import util from 'util'
-import globalStore from 'globalStore'
-import ForexValuesButtons from 'components/ForexValuesButtons'
 import MainPage from 'components/MainPage/MainPage'
 
 export default function init() {
@@ -102,15 +100,13 @@ function polifill() {
 		let methods = ('clear,count,debug,dir,dirxml,error,exception,group,' +
 			'groupCollapsed,groupEnd,info,log,markTimeline,profile,profiles,profileEnd,' +
 			'show,table,time,timeEnd,timeline,timelineEnd,timeStamp,trace,warn').split(',')
+		/* eslint-disable */
 		while (prop = properties.pop()) if (!con[prop]) con[prop] = empty
 		while (method = methods.pop()) if (!con[method]) con[method] = dummy
-
+		/* eslint-enable */
 		con.assert = function(assertion, errorMsg) {
 			if (!assertion) {
-				throw {
-					name: 'AssertionError',
-					message: errorMsg
-				}
+				throw new Error('[AssertionError] ' + errorMsg)
 			}
 		}
 	})(typeof window === 'undefined' ? this : window)

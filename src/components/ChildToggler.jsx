@@ -2,7 +2,7 @@ import React from 'react/addons'
 import reactMixin from 'react-mixin'
 import IntervalMixin from 'mixins/IntervalMixin'
 
-let ReactCSSTransitionGroup = React.addons.CSSTransitionGroup
+// let ReactCSSTransitionGroup = React.addons.CSSTransitionGroup
 
 class ChildToggler extends React.Component {
 	static propTypes = {

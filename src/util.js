@@ -1,5 +1,5 @@
 export default {
-	showProgress(element, show/*, XHR */) {
+	showProgress(element, show/* , XHR */) {
 		/*
 		 * Show progress indicator for domNode or whole document
 		 * @param {domNode}
