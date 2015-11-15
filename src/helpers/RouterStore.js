@@ -14,7 +14,7 @@ export default class RouterStore extends EventedStore {
 	 * 			'user-list':    '/user',
 	 * 			'user-detail':  '/user/:user',
 	 * 			'nested-path':  '/nested/:paramA/:paramB',
-	 * 			'main-page':    ''
+	 * 			'main-page':    '/'
 	 * 		})
 	 *   	// add custom route
 	 * 		router.set('test-page', '/test-test-test')
@@ -53,20 +53,34 @@ export default class RouterStore extends EventedStore {
 		}
 
 		this._dispatch()
+		this._handleClicks()
 	}
 
-	_dispatch() {
-		let path = this.getPath()
-		Object.keys(this._data).some((routeAlias) => {
-			let route = this._data[routeAlias]
-			if (route instanceof Route) {
-				let matchRoute = route.match(path)
-				if (matchRoute !== false) {
-					// TU MI PRZERWANO
+	_handleClicks() {
+		document.addEventListener('click', (e) => {
+			let element = e.target
+			if (element.nodeName === 'A') {
+				if (this._dispatch(element.getAttribute('href'))) {
+					e.preventDefault()
 				}
 			}
 		})
-		this.route()
+	}
+
+	/**
+	 * Dispatch initial route events on page load.
+	 */
+	_dispatch(path = this.getPath()) {
+		return Object.keys(this._data).some((routeAlias) => {
+			let route = this._data[routeAlias]
+			if (route instanceof Route) {
+				let routeParams = route.match(path)
+				if (routeParams !== false) {
+					this.route(routeAlias, routeParams, true)
+					return true
+				}
+			}
+		})
 	}
 
 	set(field, value, silent) {
@@ -74,31 +88,36 @@ export default class RouterStore extends EventedStore {
 		return super.set(field, value, silent)
 	}
 
-	route(routeAlias, params = {}, initial = false) {
+	getRouteUrl(routeAlias, params = {}) {
 		let route = this.get(routeAlias)
 
-		let newPath = route.reverse(params)
-		let oldPath = this.getPath()
+		return route.reverse(params)
+	}
 
-		if (newPath === oldPath) {
+	route(routeAlias, params = {}, initial = false) {
+		let newPath = this.getRouteUrl(routeAlias, params)
+
+		if (newPath === this.getPath()) {
 			return
 		}
 
-		this.navigate(newPath, params)
 		let routeDetail = {
 			route: routeAlias,
 			params: params,
 			initial: initial
 		}
-		this.set('route', routeDetail)
 		this.trigger(`route:${routeAlias}`, routeDetail)
+		super.set('route', routeDetail)
+
+		this._navigate(newPath, params)
 	}
 
 	getPath() {
 		return window.location.pathname
 	}
 
-	navigate(path, params) {
+	_navigate(path, params) {
+		// TODO: IE8 fallback
 		window.history.pushState(params, document.title, path)
 	}
 }

@@ -1,3 +1,3 @@
-import EventedStore from 'helpers/eventedStore'
+import EventedStore from 'helpers/EventedStore'
 
 export default new EventedStore()

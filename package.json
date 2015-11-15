@@ -16,7 +16,7 @@
     "rdash-ui": "https://github.com/rdash/rdash-ui/archive/958c12d441eeb9f917d56641a035c7be82aea5c5.tar.gz",
     "react": "0.13.3",
     "react-mixin": "3.0.1",
-    "route-parser": "0.0.4",
+    "route-parser": "https://github.com/CezaryDanielNowak/route-parser/archive/master.tar.gz",
     "tota11y": "0.0.10",
     "vis": "4.9.0"
   },

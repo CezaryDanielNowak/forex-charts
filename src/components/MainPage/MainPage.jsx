@@ -1,7 +1,7 @@
 import React from 'react'
-import globalStore from 'globalStore'
 import ForexValuesButtons from 'components/ForexValuesButtons'
-import ChildToggler from 'components/ChildToggler'
+import RouterStore from 'helpers/RouterStore'
+
 
 export default class MainPage extends React.Component {
 	constructor(props) {
@@ -9,6 +9,15 @@ export default class MainPage extends React.Component {
 		this.state = {
 			isSidebarOpen: true
 		}
+		/* eslint-disable */
+		this.router = new RouterStore({
+			'dashboard':    '/dashboard',
+			'user-list':    '/user',
+			'user-detail':  '/user/:user',
+			'nested-path':  '/nested/:paramA/:paramB',
+			'main-page':    '/'
+		})
+		/* eslint-enable */
 	}
 
 	toggleState(stateField, e) {
@@ -60,9 +69,9 @@ export default class MainPage extends React.Component {
 						<div className="row header">
 							<div className="col-xs-12">
 								<div className="user pull-right">
+									{/*
 									<div className="item dropdown">
-										<a href="#" className="dropdown-toggle">
-											<ChildToggler className="widget-icon red">
+											<a href="#" className="dropdown-toggle">
 												<i className="fa fa-eur" key="eur"></i>
 												<i className="fa fa-inr" key="inr"></i>
 												<i className="fa fa-jpy" key="jpy"></i>
@@ -73,8 +82,8 @@ export default class MainPage extends React.Component {
 												<i className="fa fa-gbp" key="gbp"></i>
 												<i className="fa fa-krw" key="krw"></i>
 												<i className="fa fa-money" key="money"></i>
-											</ChildToggler>
-										</a>
+											</a>
+
 										<ul className="dropdown-menu dropdown-menu-right">
 											<li className="dropdown-header">
 												Joe Bloggs
@@ -98,7 +107,7 @@ export default class MainPage extends React.Component {
 											</li>
 										</ul>
 									</div>
-
+									*/}
 									<div className="item dropdown">
 										<a href="#" className="dropdown-toggle" data-toggle="dropdown">
 											<i className="fa fa-bell-o"></i>
@@ -115,7 +124,7 @@ export default class MainPage extends React.Component {
 									</div>
 
 									<div className="item dropdown">
-										<a href="#" className="dropdown-toggle" data-toggle="dropdown">
+										<a href="#" className="dropdown-toggle" data-toggle="dropdown" title="Select value">
 											<i className="fa fa-money"></i>
 										</a>
 										<ForexValuesButtons className="dropdown-menu dropdown-menu-right">
@@ -132,7 +141,7 @@ export default class MainPage extends React.Component {
 										Dashboard
 									</div>
 									<div className="breadcrumb-links">
-										Home / Dashboard
+										<a href={this.router.getRouteUrl('main-page')}>Home</a> / <a href={this.router.getRouteUrl('dashboard')}>Dashboard</a>
 									</div>
 								</div>
 							</div>
